@@ -74,40 +74,6 @@ export const ControlPanel: React.FC<{
 
     return (
         <div className="bg-white border-t p-4 space-y-4">
-            <div className="grid w-full max-w-sm items-center gap-3">
-                <div className="flex justify-between items-end">
-                    <Label className="text-sm" htmlFor="textArea">
-                        Custom text
-                    </Label>
-                    <Select value={config.font} onValueChange={handleLoadFont}>
-                        <SelectTrigger className="w-fit" size="sm">
-                            <SelectValue placeholder="Font" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {POPULAR_FONTS.map((font) => (
-                                <SelectItem
-                                    key={font}
-                                    value={font}
-                                    style={{
-                                        fontFamily: `"${font}", Arial, sans-serif`,
-                                    }}
-                                >
-                                    {font}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-
-                <Textarea
-                    id="textArea"
-                    cols={3}
-                    value={config.text}
-                    onChange={(e) => onConfigChange({ text: e.target.value })}
-                    placeholder="Enter your text here..."
-                />
-            </div>
-
             <div className="flex gap-4">
                 <div className="grid w-full max-w-sm items-center gap-3">
                     <Label className="text-sm" htmlFor="textArea">

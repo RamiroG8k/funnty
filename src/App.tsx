@@ -3,7 +3,26 @@ import { useGoogleFonts } from "./hooks/useGoogleFonts/useGoogleFonts";
 import { TextCanvas } from "./components/organisms/TextCanvas";
 import { ControlPanel } from "./components/organisms/ControlPanel";
 import { Button } from "./components/atoms/button";
-import { Download } from "lucide-react";
+import { Download, Settings } from "lucide-react";
+import {
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerDescription,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+} from "./components/molecules/drawer";
+import { Textarea } from "./components/atoms/textarea";
+import { Label } from "./components/atoms/label";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "./components/atoms/select";
 
 // Types
 interface TextConfig {
@@ -22,6 +41,39 @@ interface TextConfig {
     alignment: "left" | "center" | "right";
     maxWidth: number;
 }
+
+const POPULAR_FONTS = [
+    "Inter",
+    "Roboto",
+    "Montserrat",
+    "Poppins",
+    "Open Sans",
+    "Lato",
+    "Source Sans 3",
+    "Oswald",
+    "Raleway",
+    "Nunito",
+    "Noto Sans",
+    "Noto Serif",
+    "Playfair Display",
+    "Merriweather",
+    "Work Sans",
+    "Fira Sans",
+    "Quicksand",
+    "Kanit",
+    "Rubik",
+    "Archivo",
+    "Manrope",
+    "Space Grotesk",
+    "DM Sans",
+    "IBM Plex Sans",
+    "Bebas Neue",
+    "Dancing Script",
+    "Permanent Marker",
+    "Abril Fatface",
+    "Titillium Web",
+    "Overpass",
+];
 
 // Main App Component
 const TextCanvasApp: React.FC = () => {
@@ -116,6 +168,11 @@ const TextCanvasApp: React.FC = () => {
         loadFont(config.font);
     }, []);
 
+    const handleLoadFont = (font: string) => {
+        updateConfig({ font });
+        loadFont(font);
+    };
+
     return (
         <div className="min-h-screen flex flex-col">
             <header className="bg-white border-b px-4 py-3">
@@ -128,19 +185,70 @@ const TextCanvasApp: React.FC = () => {
                 </div>
             </header>
 
-            <div className="flex-1 flex flex-col lg:flex-row">
-                <div className="flex-1 p-4">
-                    <TextCanvas config={config} onConfigChange={updateConfig} />
+            <main className="flex-1 flex flex-col lg:flex-row gap-4 p-4">
+                <div className="lg:w-5/6 relative">
+                    <TextCanvas config={config} />
+
+                    <Drawer>
+                        <DrawerTrigger className="right-6 bottom-6 absolute">
+                            <Button onClick={() => {}} variant="outline">
+                                <Settings />
+                            </Button>
+                        </DrawerTrigger>
+                        <DrawerContent>
+                            <DrawerHeader>
+                                <DrawerTitle>Text settings</DrawerTitle>
+                                <DrawerDescription>
+                                    This action cannot be undone.
+                                </DrawerDescription>
+                            </DrawerHeader>
+
+                            <ControlPanel
+                                config={config}
+                                onConfigChange={updateConfig}
+                                onLoadFont={loadFont}
+                            />
+                        </DrawerContent>
+                    </Drawer>
                 </div>
 
-                <div className="lg:w-80 lg:max-h-screen lg:overflow-y-auto">
-                    <ControlPanel
-                        config={config}
-                        onConfigChange={updateConfig}
-                        onLoadFont={loadFont}
+                <div className="grid h-fit lg:w-1/6 gap-3">
+                    <div className="flex justify-between items-end">
+                        <Label className="text-sm" htmlFor="textArea">
+                            Custom text
+                        </Label>
+                        <Select
+                            value={config.font}
+                            onValueChange={handleLoadFont}
+                        >
+                            <SelectTrigger className="w-fit" size="sm">
+                                <SelectValue placeholder="Font" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {POPULAR_FONTS.map((font) => (
+                                    <SelectItem
+                                        key={font}
+                                        value={font}
+                                        style={{
+                                            fontFamily: `"${font}", Arial, sans-serif`,
+                                        }}
+                                    >
+                                        {font}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <Textarea
+                        id="textArea"
+                        cols={3}
+                        value={config.text}
+                        onChange={(e) => updateConfig({ text: e.target.value })}
+                        placeholder="Enter your text here..."
                     />
                 </div>
-            </div>
+            </main>
 
             {isLoading && (
                 <div className="fixed top-4 right-4 bg-blue-500 text-white px-3 py-2 rounded-md text-sm">

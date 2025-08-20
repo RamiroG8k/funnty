@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 interface TextConfig {
     text: string;
@@ -19,12 +19,9 @@ interface TextConfig {
 
 export const TextCanvas: React.FC<{
     config: TextConfig;
-    onConfigChange: (config: Partial<TextConfig>) => void;
-}> = ({ config, onConfigChange }) => {
+}> = ({ config }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-    const [isDragging, setIsDragging] = useState(false);
-    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
     const drawText = useCallback(() => {
         const canvas = canvasRef.current;
@@ -182,36 +179,6 @@ export const TextCanvas: React.FC<{
         }
     };
 
-    // Handle mouse/touch interactions
-    const handlePointerDown = (e: React.PointerEvent) => {
-        setIsDragging(true);
-        setDragStart({ x: e.clientX, y: e.clientY });
-        e.currentTarget.setPointerCapture(e.pointerId);
-    };
-
-    const handlePointerMove = (e: React.PointerEvent) => {
-        if (!isDragging) return;
-
-        const deltaX = e.clientX - dragStart.x;
-        const deltaY = e.clientY - dragStart.y;
-
-        // For now, we'll use drag to adjust scale and rotation
-        const scaleFactor = 1 + deltaY / 200;
-        const rotationDelta = deltaX / 2;
-
-        onConfigChange({
-            scale: Math.max(0.1, Math.min(3, config.scale * scaleFactor)),
-            rotation: (config.rotation + rotationDelta) % 360,
-        });
-
-        setDragStart({ x: e.clientX, y: e.clientY });
-    };
-
-    const handlePointerUp = (e: React.PointerEvent) => {
-        setIsDragging(false);
-        e.currentTarget.releasePointerCapture(e.pointerId);
-    };
-
     useEffect(() => {
         drawText();
     }, [drawText]);
@@ -219,10 +186,7 @@ export const TextCanvas: React.FC<{
     return (
         <div
             ref={containerRef}
-            className="flex-1 bg-gray-50 rounded-lg overflow-hidden cursor-crosshair"
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
+            className="flex-1 h-[70dvh] lg:h-full w-full bg-gray-50 border rounded-lg overflow-hidden"
         >
             <canvas ref={canvasRef} className="w-full h-full" />
         </div>
