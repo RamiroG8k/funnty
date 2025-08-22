@@ -11,12 +11,17 @@ const useGoogleFonts = () => {
             setIsLoading(true);
             try {
                 const link = document.createElement("link");
-                link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(fontFamily.replace(/\s+/g, "+"))}:wght@${weights}&display=swap`;
+
+                link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(fontFamily.replace(/\s+/g, "+"))}:ital,wght@0,${weights};1,${weights}&display=swap`;
                 link.rel = "stylesheet";
+
+                console.log(`Loading font: ${link.href}, ${link.rel}`);
+
                 document.head.appendChild(link);
 
                 // Wait for font to load
                 await document.fonts.load(`16px "${fontFamily}"`);
+
                 setLoadedFonts((prev) => new Set([...prev, fontFamily]));
             } catch (error) {
                 console.warn(`Failed to load font: ${fontFamily}`, error);

@@ -4,7 +4,7 @@ interface TextConfig {
     text: string;
     font: string;
     size: number;
-    weight: number;
+    weight: string;
     color: string;
     strokeWidth: number;
     strokeColor: string;

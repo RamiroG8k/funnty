@@ -1,76 +1,11 @@
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "../atoms/select";
-import { Textarea } from "../atoms/textarea";
 import { Label } from "../atoms/label";
 import { Slider } from "../atoms/slider";
 import { Input } from "../atoms/input";
 import { ToggleGroup, ToggleGroupItem } from "../atoms/toggle-group";
+import { useTextConfig } from "@/context/textConfig";
 
-interface TextConfig {
-    text: string;
-    font: string;
-    size: number;
-    weight: number;
-    color: string;
-    strokeWidth: number;
-    strokeColor: string;
-    letterSpacing: number;
-    lineHeight: number;
-    padding: number;
-    scale: number;
-    rotation: number;
-    alignment: "left" | "center" | "right";
-    maxWidth: number;
-}
-
-// Popular Google Fonts
-const POPULAR_FONTS = [
-    "Inter",
-    "Roboto",
-    "Montserrat",
-    "Poppins",
-    "Open Sans",
-    "Lato",
-    "Source Sans 3",
-    "Oswald",
-    "Raleway",
-    "Nunito",
-    "Noto Sans",
-    "Noto Serif",
-    "Playfair Display",
-    "Merriweather",
-    "Work Sans",
-    "Fira Sans",
-    "Quicksand",
-    "Kanit",
-    "Rubik",
-    "Archivo",
-    "Manrope",
-    "Space Grotesk",
-    "DM Sans",
-    "IBM Plex Sans",
-    "Bebas Neue",
-    "Dancing Script",
-    "Permanent Marker",
-    "Abril Fatface",
-    "Titillium Web",
-    "Overpass",
-];
-
-export const ControlPanel: React.FC<{
-    config: TextConfig;
-    onConfigChange: (config: Partial<TextConfig>) => void;
-    onLoadFont: (font: string) => void;
-}> = ({ config, onConfigChange, onLoadFont }) => {
-    const handleLoadFont = (font: string) => {
-        onConfigChange({ font });
-        onLoadFont(font);
-    };
+export const ControlPanel: React.FC = () => {
+    const { updateConfig, ...config } = useTextConfig();
 
     return (
         <div className="bg-white border-t p-4 space-y-4">
@@ -85,22 +20,22 @@ export const ControlPanel: React.FC<{
                         value={[config.size]}
                         step={2}
                         onValueChange={([value]) =>
-                            onConfigChange({ size: value })
+                            updateConfig({ size: value })
                         }
                     />
                 </div>
 
                 <div className="grid w-full max-w-sm items-center gap-3">
                     <Label className="text-sm" htmlFor="textArea">
-                        Size: {config.weight}px
+                        Weight: {config.weight}px
                     </Label>
                     <Slider
                         min={100}
                         max={900}
-                        value={[config.weight]}
+                        value={[parseInt(config.weight)]}
                         step={100}
                         onValueChange={([value]) =>
-                            onConfigChange({ weight: value })
+                            updateConfig({ weight: value.toString() })
                         }
                     />
                 </div>
@@ -117,7 +52,7 @@ export const ControlPanel: React.FC<{
                         type="color"
                         value={config.color}
                         onChange={(e) =>
-                            onConfigChange({ color: e.target.value })
+                            updateConfig({ color: e.target.value })
                         }
                     />
                 </div>
@@ -131,47 +66,43 @@ export const ControlPanel: React.FC<{
                         type="color"
                         value={config.strokeColor}
                         onChange={(e) =>
-                            onConfigChange({ strokeColor: e.target.value })
+                            updateConfig({ strokeColor: e.target.value })
                         }
                     />
                 </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <label className="block text-sm font-medium mb-1">
+                <div className="grid w-full max-w-sm items-center gap-3">
+                    <Label className="text-sm" htmlFor="textArea">
                         Stroke Width: {config.strokeWidth}
-                    </label>
-                    <input
-                        type="range"
-                        min="0"
-                        max="10"
-                        step="0.5"
-                        value={config.strokeWidth}
-                        onChange={(e) =>
-                            onConfigChange({
-                                strokeWidth: parseFloat(e.target.value),
+                    </Label>
+                    <Slider
+                        min={0}
+                        max={10}
+                        value={[config.strokeWidth]}
+                        step={0.5}
+                        onValueChange={([value]) =>
+                            updateConfig({
+                                strokeWidth: value,
                             })
                         }
-                        className="w-full"
                     />
                 </div>
-                <div>
-                    <label className="block text-sm font-medium mb-1">
+                <div className="grid w-full max-w-sm items-center gap-3">
+                    <Label className="text-sm" htmlFor="textArea">
                         Letter Spacing: {config.letterSpacing}
-                    </label>
-                    <input
-                        type="range"
-                        min="-2"
-                        max="10"
-                        step="0.1"
-                        value={config.letterSpacing}
-                        onChange={(e) =>
-                            onConfigChange({
-                                letterSpacing: parseFloat(e.target.value),
+                    </Label>
+                    <Slider
+                        min={-5}
+                        max={10}
+                        value={[config.letterSpacing]}
+                        step={0.1}
+                        onValueChange={([value]) =>
+                            updateConfig({
+                                letterSpacing: value,
                             })
                         }
-                        className="w-full"
                     />
                 </div>
             </div>
@@ -187,7 +118,7 @@ export const ControlPanel: React.FC<{
                         size="sm"
                         onValueChange={(
                             alignment: "left" | "center" | "right",
-                        ) => onConfigChange({ alignment })}
+                        ) => updateConfig({ alignment })}
                     >
                         <ToggleGroupItem value="left">Left</ToggleGroupItem>
                         <ToggleGroupItem value="center">Center</ToggleGroupItem>
