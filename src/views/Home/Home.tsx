@@ -14,25 +14,21 @@ export const Home: React.FC = () => {
 
     useEffect(() => {
         loadFont(config.font as GoogleFontKey);
-    }, [loadFont, config.font]);
-
-    const handleLoadFont = (font: GoogleFontKey) => {
-        loadFont(font);
-    };
+    }, [config.font]);
 
     return (
-        <main className="relative min-h-screen flex-1 flex flex-col lg:flex-row gap-4 p-4 overflow-hidden">
-            <div className="relative h-[75dvh] lg:h-[calc(100dvh-2rem)] grow-0 lg:w-4/5 flex justify-center">
+        <main className="min-h-screen grid grid-cols-1 lg:grid-cols-4 place-items-start gap-4 p-4">
+            <div className="h-[75dvh] lg:h-[calc(100dvh-2rem)] w-full lg:col-span-3 relative flex justify-center">
                 <FontOptions
                     className="absolute top-3 z-10 [&>div]:bg-red-300"
-                    onFontChange={handleLoadFont}
+                    onFontChange={loadFont}
                 />
 
-                <TextCanvas />
+                <TextCanvas className="w-full grow-0" />
             </div>
 
             <InputField
-                className="w-full lg:w-1/5 [&>textarea,&>input]:bg-background shrink-0"
+                className="h-fit w-full [&>textarea,&>input]:bg-background z-10"
                 cols={3}
                 id="textArea"
                 label="Custom text"

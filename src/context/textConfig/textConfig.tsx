@@ -5,8 +5,8 @@ import {
     useState,
     useEffect,
 } from "react";
-import { getConfigFromUrl } from "@/components/organisms/TextCanvas/canvasTextUtils";
 import { TextConfig } from "./types";
+import { getConfigFromUrl } from "../textProviderUtils";
 
 interface TextConfigContextProps extends TextConfig {
     updateConfig: (newConfig: Partial<TextConfig>) => void;

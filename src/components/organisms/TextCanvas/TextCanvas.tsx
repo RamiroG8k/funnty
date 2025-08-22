@@ -2,10 +2,16 @@ import { useTextConfig } from "@/context/textConfig";
 import { useCallback, useEffect, useRef } from "react";
 import { QuickActions } from "../QuickActions";
 import { drawTextWithLetterSpacing, wrapText } from "./canvasTextUtils";
+import { cn } from "@/lib/utils";
 
 const PADDING = 40;
 
-export const TextCanvas: React.FC = () => {
+type TextCanvasProps = {
+    className?: string;
+};
+
+export const TextCanvas: React.FC<TextCanvasProps> = (props) => {
+    const { className } = props;
     const { ...config } = useTextConfig();
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -105,9 +111,15 @@ export const TextCanvas: React.FC = () => {
     return (
         <div
             ref={containerRef}
-            className="flex-1 lg:h-full w-full bg-gray-50 border rounded-lg overflow-hidden relative"
+            className={cn("bg-gray-50 border rounded-lg", className)}
         >
-            <canvas ref={canvasRef} className="w-full h-full" />
+            <canvas
+                ref={canvasRef}
+                style={{
+                    height: containerRef.current?.clientHeight,
+                    width: containerRef.current?.clientWidth,
+                }}
+            />
 
             <QuickActions canvas={canvasRef.current} />
         </div>
