@@ -14,17 +14,17 @@ import {
 import { ControlPanel } from "./ControlPanel";
 
 interface QuickActionsProps {
-    onCopyAsPNG: () => void;
+    onCopy: () => void;
 }
 
-export const QuickActions: React.FC<QuickActionsProps> = ({ onCopyAsPNG }) => {
+export const QuickActions: React.FC<QuickActionsProps> = (props) => {
+    const { onCopy } = props;
     const { updateConfig, weight } = useTextConfig();
 
     const handleWeightChange = ([value]: number[]) => {
         const newWeight = value.toString() as TextConfig["weight"];
         updateConfig({ weight: newWeight });
 
-        // Haptic feedback on supported devices
         if ("vibrate" in navigator) {
             navigator.vibrate(10);
         }
@@ -105,7 +105,7 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ onCopyAsPNG }) => {
             </div>
 
             <Button
-                onClick={onCopyAsPNG}
+                onClick={onCopy}
                 size="sm"
                 variant="outline"
                 className="bg-background hover:bg-primary hover:text-primary-foreground transition-colors duration-200"

@@ -100,7 +100,7 @@ type FontWeight = "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" 
 const handleWeightChange = (values: number[]) => {
     const newWeight = values[0].toString() as FontWeight;
     updateConfig({ weight: newWeight });
-    
+
     // Haptic feedback
     if ("vibrate" in navigator) {
         navigator.vibrate(10);
@@ -124,12 +124,7 @@ interface TextConfig {
     strokeColor: string;
     letterSpacing: number;
     lineHeight: number;
-    padding: number;
-    scale: number; // New: for zoom/scale functionality
-    rotation: number;
     alignment: "left" | "center" | "right";
-    maxWidth: number;
-}
 ```
 
 ## Usage Examples
@@ -142,12 +137,12 @@ import { useTextConfig } from "./context/textConfig";
 
 const App = () => {
     const { updateConfig, ...config } = useTextConfig();
-    
+
     return (
         <div className="relative">
-            <TextCanvas 
-                config={config} 
-                onConfigUpdate={updateConfig} 
+            <TextCanvas
+                config={config}
+                onConfigUpdate={updateConfig}
             />
             <QuickActions onCopyAsPNG={handleCopyAsPNG} />
         </div>

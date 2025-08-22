@@ -19,11 +19,7 @@ export interface TextConfig {
     strokeColor: string;
     letterSpacing: number;
     lineHeight: number;
-    padding: number;
-    scale: number;
-    rotation: number;
     alignment: "left" | "center" | "right";
-    maxWidth: number;
 }
 
 interface TextConfigContextProps extends TextConfig {
@@ -34,23 +30,22 @@ const TextConfigContext = createContext<TextConfigContextProps>(
     {} as TextConfigContextProps,
 );
 
+const defaultTextConfig: TextConfig = {
+    text: `Lorem ipsumdolor
+sit amet, consectetur adipiscing elit.`,
+    font: "Montserrat",
+    size: 20,
+    weight: "400",
+    color: "#000000",
+    strokeWidth: 0,
+    strokeColor: "#FF0000",
+    letterSpacing: 0,
+    lineHeight: 1.2,
+    alignment: "left",
+};
+
 function TextConfigProvider({ children }: PropsWithChildren) {
-    const [textConfig, setTextConfig] = useState<TextConfig>({
-        text: "Salio el soool >..<",
-        font: "Montserrat",
-        size: 24,
-        weight: "400",
-        color: "#000000",
-        strokeWidth: 0,
-        strokeColor: "#000000",
-        letterSpacing: 0,
-        lineHeight: 1.2,
-        padding: 0,
-        scale: 1,
-        rotation: 0,
-        alignment: "left",
-        maxWidth: 0,
-    });
+    const [textConfig, setTextConfig] = useState<TextConfig>(defaultTextConfig);
 
     const value = {
         ...textConfig,

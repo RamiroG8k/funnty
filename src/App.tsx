@@ -4,10 +4,9 @@ import {
     useGoogleFonts,
 } from "./hooks/useGoogleFonts/useGoogleFonts";
 import { TextCanvas } from "./components/organisms/TextCanvas";
-import { Textarea } from "./components/atoms/textarea";
-import { Label } from "./components/atoms/label";
 import FontOptions from "./views/Home/FontOptions";
 import { useTextConfig } from "./context/textConfig";
+import InputField from "./components/molecules/input-field";
 
 // Main App Component
 const TextCanvasApp: React.FC = () => {
@@ -23,29 +22,30 @@ const TextCanvasApp: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col">
-            <main className="flex-1 flex flex-col lg:flex-row gap-4 p-4">
-                <div className="flex-1 lg:w-5/6 relative flex justify-center">
-                    <FontOptions onFontChange={handleLoadFont} />
+        <>
+            <div className="h-full w-full bg-gradient-to-br from-[#FF0000] via-transparent to-[#FF0000] absolute z-[0] backdrop-blur-xl opacity-5" />
+
+            <main className="relative min-h-screen flex-1 flex flex-col lg:flex-row gap-4 p-4 overflow-hidden">
+                <div className="relative h-[75dvh] lg:h-[calc(100dvh-2rem)] lg:w-4/5 flex justify-center">
+                    <FontOptions
+                        className="absolute top-3 z-10 [&>div]:bg-red-300"
+                        onFontChange={handleLoadFont}
+                    />
 
                     <TextCanvas />
                 </div>
 
-                <div className="grid h-fit lg:w-1/6 gap-2">
-                    <Label className="text-sm" htmlFor="textArea">
-                        Custom text
-                    </Label>
-
-                    <Textarea
-                        id="textArea"
-                        cols={3}
-                        value={config.text}
-                        onChange={(e) => updateConfig({ text: e.target.value })}
-                        placeholder="Enter your text here..."
-                    />
-                </div>
+                <InputField
+                    className="w-full lg:w-1/5 [&>textarea,&>input]:bg-background"
+                    cols={3}
+                    id="textArea"
+                    label="Custom text"
+                    onChange={(text) => updateConfig({ text })}
+                    placeholder="Enter your text here..."
+                    value={config.text}
+                />
             </main>
-        </div>
+        </>
     );
 };
 
