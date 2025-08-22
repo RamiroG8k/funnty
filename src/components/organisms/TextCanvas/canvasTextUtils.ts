@@ -1,3 +1,5 @@
+import { TextConfig } from "@/context/textConfig";
+
 export const wrapText = (
     ctx: CanvasRenderingContext2D,
     text: string,
@@ -105,4 +107,116 @@ export async function copyCanvasAsImage(canvas: HTMLCanvasElement) {
         console.error("fallback copy failed", err);
         void alert("Copy to clipboard failed");
     }
+}
+
+export function downloadCanvasAsImage(
+    canvas: HTMLCanvasElement,
+    filename: string = "funnty-design",
+) {
+    if (!canvas) return;
+
+    const dataUrl = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.download = `${filename}.png`;
+    link.href = dataUrl;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+export function shareUrl(textConfig: TextConfig) {
+    const params = new URLSearchParams();
+
+    // Only include non-default values to keep URL clean
+    const defaults = {
+        text: `Lorem ipsumdolor
+sit amet, consectetur adipiscing elit.`,
+        font: "Montserrat",
+        size: 20,
+        weight: "400",
+        color: "#000000",
+        strokeWidth: 0,
+        strokeColor: "#FF0000",
+        letterSpacing: 0,
+        lineHeight: 1.2,
+        alignment: "left",
+    };
+
+    Object.entries(textConfig).forEach(([key, value]) => {
+        if (
+            key !== "updateConfig" &&
+            value !== defaults[key as keyof typeof defaults]
+        ) {
+            params.set(key, String(value));
+        }
+    });
+
+    const shareUrl = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+
+    if (navigator.share) {
+        navigator
+            .share({
+                title: "Check out this text design!",
+                text: "I created this cool text design with Funnty",
+                url: shareUrl,
+            })
+            .catch(console.error);
+    } else {
+        navigator.clipboard
+            .writeText(shareUrl)
+            .then(() => {
+                alert("Share URL copied to clipboard!");
+            })
+            .catch(() => {
+                alert("Failed to copy URL to clipboard");
+            });
+    }
+}
+
+export function getConfigFromUrl(): Partial<TextConfig> | null {
+    const params = new URLSearchParams(window.location.search);
+    const config: Partial<TextConfig> = {};
+    let hasParams = false;
+
+    for (const [key, value] of params) {
+        hasParams = true;
+        switch (key) {
+            case "size":
+            case "strokeWidth":
+            case "letterSpacing":
+            case "lineHeight":
+                config[key] = parseFloat(value);
+                break;
+            case "weight":
+                if (
+                    [
+                        "100",
+                        "200",
+                        "300",
+                        "400",
+                        "500",
+                        "600",
+                        "700",
+                        "800",
+                        "900",
+                    ].includes(value)
+                ) {
+                    config[key] = value as TextConfig["weight"];
+                }
+                break;
+            case "alignment":
+                if (["left", "center", "right"].includes(value)) {
+                    config[key] = value as TextConfig["alignment"];
+                }
+                break;
+            case "text":
+            case "font":
+            case "color":
+            case "strokeColor":
+                config[key] = decodeURIComponent(value);
+                break;
+        }
+    }
+
+    return hasParams ? config : null;
 }

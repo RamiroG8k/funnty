@@ -1,8 +1,14 @@
 import React from "react";
 import { Button } from "../atoms/button";
 import { Slider } from "../atoms/slider";
-import { Clipboard, Settings } from "lucide-react";
+import { Share2, Link, Clipboard, Download, Settings } from "lucide-react";
 import { TextConfig, useTextConfig } from "@/context/textConfig";
+import { Popover, PopoverContent, PopoverTrigger } from "../atoms/popover";
+import {
+    shareUrl,
+    downloadCanvasAsImage,
+    copyCanvasAsImage,
+} from "./TextCanvas/canvasTextUtils";
 import {
     Drawer,
     DrawerContent,
@@ -14,12 +20,13 @@ import {
 import { ControlPanel } from "./ControlPanel";
 
 interface QuickActionsProps {
-    onCopy: () => void;
+    canvas?: HTMLCanvasElement | null;
 }
 
 export const QuickActions: React.FC<QuickActionsProps> = (props) => {
-    const { onCopy } = props;
-    const { updateConfig, weight } = useTextConfig();
+    const { canvas } = props;
+    const textConfig = useTextConfig();
+    const { updateConfig, weight } = textConfig;
 
     const handleWeightChange = ([value]: number[]) => {
         const newWeight = value.toString() as TextConfig["weight"];
@@ -43,6 +50,22 @@ export const QuickActions: React.FC<QuickActionsProps> = (props) => {
             "900": "Black",
         };
         return weightMap[weight] || weight;
+    };
+
+    const handleShareUrl = () => {
+        shareUrl(textConfig);
+    };
+
+    const handleDownload = () => {
+        if (canvas) {
+            downloadCanvasAsImage(canvas);
+        }
+    };
+
+    const handleCopyImage = async () => {
+        if (canvas) {
+            await copyCanvasAsImage(canvas);
+        }
     };
 
     return (
@@ -104,14 +127,48 @@ export const QuickActions: React.FC<QuickActionsProps> = (props) => {
                 </div>
             </div>
 
-            <Button
-                onClick={onCopy}
-                size="sm"
-                variant="outline"
-                className="bg-background hover:bg-primary hover:text-primary-foreground transition-colors duration-200"
-            >
-                <Clipboard className="h-4 w-4" />
-            </Button>
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button
+                        size="sm"
+                        variant="outline"
+                        className="bg-background hover:bg-primary hover:text-primary-foreground transition-colors duration-200"
+                    >
+                        <Share2 className="h-4 w-4" />
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-48 p-2" align="end">
+                    <div className="flex flex-col gap-1">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleShareUrl}
+                            className="justify-start gap-2"
+                        >
+                            <Link className="h-4 w-4" />
+                            Share URL
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleCopyImage}
+                            className="justify-start gap-2"
+                        >
+                            <Clipboard className="h-4 w-4" />
+                            Copy Image
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleDownload}
+                            className="justify-start gap-2"
+                        >
+                            <Download className="h-4 w-4" />
+                            Download
+                        </Button>
+                    </div>
+                </PopoverContent>
+            </Popover>
         </div>
     );
 };

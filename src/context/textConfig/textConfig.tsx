@@ -1,26 +1,12 @@
-import { createContext, PropsWithChildren, useContext, useState } from "react";
-
-export interface TextConfig {
-    text: string;
-    font: string;
-    size: number;
-    weight:
-        | "100"
-        | "200"
-        | "300"
-        | "400"
-        | "500"
-        | "600"
-        | "700"
-        | "800"
-        | "900";
-    color: string;
-    strokeWidth: number;
-    strokeColor: string;
-    letterSpacing: number;
-    lineHeight: number;
-    alignment: "left" | "center" | "right";
-}
+import {
+    createContext,
+    PropsWithChildren,
+    useContext,
+    useState,
+    useEffect,
+} from "react";
+import { getConfigFromUrl } from "@/components/organisms/TextCanvas/canvasTextUtils";
+import { TextConfig } from "./types";
 
 interface TextConfigContextProps extends TextConfig {
     updateConfig: (newConfig: Partial<TextConfig>) => void;
@@ -46,6 +32,13 @@ sit amet, consectetur adipiscing elit.`,
 
 function TextConfigProvider({ children }: PropsWithChildren) {
     const [textConfig, setTextConfig] = useState<TextConfig>(defaultTextConfig);
+
+    useEffect(() => {
+        const urlConfig = getConfigFromUrl();
+        if (urlConfig) {
+            setTextConfig((prevConfig) => ({ ...prevConfig, ...urlConfig }));
+        }
+    }, []);
 
     const value = {
         ...textConfig,

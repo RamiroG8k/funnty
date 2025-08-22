@@ -1,11 +1,7 @@
 import { useTextConfig } from "@/context/textConfig";
 import { useCallback, useEffect, useRef } from "react";
 import { QuickActions } from "../QuickActions";
-import {
-    copyCanvasAsImage,
-    drawTextWithLetterSpacing,
-    wrapText,
-} from "./canvasTextUtils";
+import { drawTextWithLetterSpacing, wrapText } from "./canvasTextUtils";
 
 const PADDING = 40;
 
@@ -113,11 +109,7 @@ export const TextCanvas: React.FC = () => {
         >
             <canvas ref={canvasRef} className="w-full h-full" />
 
-            <QuickActions
-                onCopy={() =>
-                    copyCanvasAsImage(canvasRef.current as HTMLCanvasElement)
-                }
-            />
+            <QuickActions canvas={canvasRef.current} />
         </div>
     );
 };
