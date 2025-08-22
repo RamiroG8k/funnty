@@ -1,31 +1,17 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import { useTextConfig } from "@/context/textConfig";
+import { useCallback, useEffect, useRef } from "react";
+import { QuickActions } from "./QuickActions";
 
-interface TextConfig {
-    text: string;
-    font: string;
-    size: number;
-    weight: string;
-    color: string;
-    strokeWidth: number;
-    strokeColor: string;
-    letterSpacing: number;
-    lineHeight: number;
-    padding: number;
-    scale: number;
-    rotation: number;
-    alignment: "left" | "center" | "right";
-    maxWidth: number;
-}
+export const TextCanvas: React.FC = () => {
+    const { ...config } = useTextConfig();
 
-export const TextCanvas: React.FC<{
-    config: TextConfig;
-}> = ({ config }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
     const drawText = useCallback(() => {
         const canvas = canvasRef.current;
         const container = containerRef.current;
+
         if (!canvas || !container) return;
 
         const ctx = canvas.getContext("2d")!;
@@ -179,6 +165,40 @@ export const TextCanvas: React.FC<{
         }
     };
 
+    async function copyCanvasAsImage() {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const blob: Blob | null = await new Promise((resolve) =>
+            canvas.toBlob(resolve, "image/png"),
+        );
+
+        if (!blob) {
+            alert("Failed to get image data from canvas");
+            return;
+        }
+
+        try {
+            const data = new window.ClipboardItem({ [blob.type]: blob });
+
+            await navigator.clipboard.write([data]);
+        } catch (err) {
+            console.warn(
+                "navigator.clipboard.write with ClipboardItem failed",
+                err,
+            );
+        }
+
+        try {
+            const dataUrl = canvas.toDataURL("image/png");
+            await navigator.clipboard.writeText(dataUrl);
+            void alert("Image data URL copied to clipboard (fallback)");
+        } catch (err) {
+            console.error("fallback copy failed", err);
+            void alert("Copy to clipboard failed");
+        }
+    }
+
     useEffect(() => {
         drawText();
     }, [drawText]);
@@ -186,9 +206,11 @@ export const TextCanvas: React.FC<{
     return (
         <div
             ref={containerRef}
-            className="flex-1 h-[70dvh] lg:h-full w-full bg-gray-50 border rounded-lg overflow-hidden"
+            className="flex-1 lg:h-full w-full bg-gray-50 border rounded-lg overflow-hidden relative"
         >
             <canvas ref={canvasRef} className="w-full h-full" />
+
+            <QuickActions onCopyAsPNG={copyCanvasAsImage} />
         </div>
     );
 };

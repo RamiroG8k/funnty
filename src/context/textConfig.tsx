@@ -37,7 +37,7 @@ const TextConfigContext = createContext<TextConfigContextProps>(
 function TextConfigProvider({ children }: PropsWithChildren) {
     const [textConfig, setTextConfig] = useState<TextConfig>({
         text: "Salio el soool >..<",
-        font: "Arial",
+        font: "Montserrat",
         size: 24,
         weight: "400",
         color: "#000000",

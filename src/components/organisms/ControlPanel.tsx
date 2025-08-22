@@ -24,21 +24,6 @@ export const ControlPanel: React.FC = () => {
                         }
                     />
                 </div>
-
-                <div className="grid w-full max-w-sm items-center gap-3">
-                    <Label className="text-sm" htmlFor="textArea">
-                        Weight: {config.weight}px
-                    </Label>
-                    <Slider
-                        min={100}
-                        max={900}
-                        value={[parseInt(config.weight)]}
-                        step={100}
-                        onValueChange={([value]) =>
-                            updateConfig({ weight: value.toString() })
-                        }
-                    />
-                </div>
             </div>
 
             {/* Colors */}
