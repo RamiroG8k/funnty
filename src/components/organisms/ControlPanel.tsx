@@ -1,39 +1,31 @@
 import { Label } from "../atoms/label";
 import { Slider } from "../atoms/slider";
 import { Input } from "../atoms/input";
-import { ToggleGroup, ToggleGroupItem } from "../atoms/toggle-group";
 import { useTextConfig } from "@/context/textConfig";
 
 export const ControlPanel: React.FC = () => {
     const { updateConfig, ...config } = useTextConfig();
 
     return (
-        <div className="bg-white border-t p-4 space-y-4">
-            <div className="flex gap-4">
-                <div className="grid w-full max-w-sm items-center gap-3">
-                    <Label className="text-sm" htmlFor="textArea">
-                        Size: {config.size}px
-                    </Label>
+        <div className="grid bg-white border-t p-4 space-y-4 pb-16">
+            <div className="grid w-full items-center gap-3">
+                <Label className="text-sm" htmlFor="textArea">
+                    Size: {config.size}px
+                </Label>
+
+                <div className="flex gap-2">
                     <Slider
-                        min={12}
+                        min={1}
                         max={200}
                         value={[config.size]}
-                        step={2}
+                        step={1}
                         onValueChange={([value]) =>
                             updateConfig({ size: value })
                         }
                     />
-                </div>
-            </div>
-
-            {/* Colors */}
-            <div className="grid grid-cols-2 gap-4">
-                <div className="grid w-full max-w-sm items-center gap-3">
-                    <Label className="text-sm" htmlFor="fill-color">
-                        Text Color
-                    </Label>
                     <Input
-                        id="fill-color"
+                        className="size-8 p-0 aspect-square shrink-0"
+                        id="stroke-color"
                         type="color"
                         value={config.color}
                         onChange={(e) =>
@@ -41,12 +33,27 @@ export const ControlPanel: React.FC = () => {
                         }
                     />
                 </div>
+            </div>
 
-                <div className="grid w-full max-w-sm items-center gap-3">
-                    <Label className="text-sm" htmlFor="stroke-color">
-                        Stroke Color
-                    </Label>
+            <div className="grid w-full items-center gap-3">
+                <Label className="text-sm" htmlFor="fill-color">
+                    Stroke Size: {config.strokeWidth}px
+                </Label>
+
+                <div className="flex gap-2">
+                    <Slider
+                        min={-2}
+                        max={20}
+                        value={[config.strokeWidth]}
+                        step={0.5}
+                        onValueChange={([value]) =>
+                            updateConfig({
+                                strokeWidth: value,
+                            })
+                        }
+                    />
                     <Input
+                        className="size-8 p-0 aspect-square shrink-0"
                         id="stroke-color"
                         type="color"
                         value={config.strokeColor}
@@ -57,59 +64,39 @@ export const ControlPanel: React.FC = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-                <div className="grid w-full max-w-sm items-center gap-3">
-                    <Label className="text-sm" htmlFor="textArea">
-                        Stroke Width: {config.strokeWidth}
-                    </Label>
-                    <Slider
-                        min={0}
-                        max={10}
-                        value={[config.strokeWidth]}
-                        step={0.5}
-                        onValueChange={([value]) =>
-                            updateConfig({
-                                strokeWidth: value,
-                            })
-                        }
-                    />
-                </div>
-                <div className="grid w-full max-w-sm items-center gap-3">
-                    <Label className="text-sm" htmlFor="textArea">
-                        Letter Spacing: {config.letterSpacing}
-                    </Label>
-                    <Slider
-                        min={-5}
-                        max={10}
-                        value={[config.letterSpacing]}
-                        step={0.1}
-                        onValueChange={([value]) =>
-                            updateConfig({
-                                letterSpacing: value,
-                            })
-                        }
-                    />
-                </div>
-            </div>
+            {/*TODO: Fix misalignment when letter spacing applied and alignment*/}
+            {/*<div className="grid w-full items-center gap-3">
+                <Label className="text-sm" htmlFor="textArea">
+                    Letter Spacing: {config.letterSpacing}
+                </Label>
+                <Slider
+                    min={-20}
+                    max={20}
+                    value={[config.letterSpacing]}
+                    step={0.1}
+                    onValueChange={([value]) =>
+                        updateConfig({
+                            letterSpacing: value,
+                        })
+                    }
+                />
+            </div>*/}
 
-            <div>
-                <label className="block text-sm font-medium mb-2">
-                    Text Alignment
-                </label>
-                <div className="flex gap-2">
-                    <ToggleGroup
-                        variant="outline"
-                        type="single"
-                        size="sm"
-                        onValueChange={(
-                            alignment: "left" | "center" | "right",
-                        ) => updateConfig({ alignment })}
-                    >
-                        <ToggleGroupItem value="left">Left</ToggleGroupItem>
-                        <ToggleGroupItem value="center">Center</ToggleGroupItem>
-                        <ToggleGroupItem value="right">Right</ToggleGroupItem>
-                    </ToggleGroup>
-                </div>
+            <div className="grid w-full items-center gap-3">
+                <Label className="text-sm" htmlFor="textArea">
+                    Line height: {config.lineHeight}
+                </Label>
+                <Slider
+                    min={-2}
+                    max={2}
+                    value={[config.lineHeight]}
+                    step={0.25}
+                    onValueChange={([value]) =>
+                        updateConfig({
+                            lineHeight: value,
+                        })
+                    }
+                />
             </div>
         </div>
     );

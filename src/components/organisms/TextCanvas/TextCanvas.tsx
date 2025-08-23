@@ -106,7 +106,7 @@ export const TextCanvas: React.FC<TextCanvasProps> = (props) => {
 
     useEffect(() => {
         drawText();
-    }, [drawText]);
+    }, [config]);
 
     return (
         <div

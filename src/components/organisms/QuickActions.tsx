@@ -91,9 +91,9 @@ export const QuickActions: React.FC<QuickActionsProps> = (props) => {
                 </DrawerContent>
             </Drawer>
 
-            <div className="flex-1 max-w-xs bg-background/95 backdrop-blur-sm border rounded-lg px-2.5 py-2">
+            <div className="flex-1 max-w-xs bg-background/95 shadow-xs backdrop-blur-sm border rounded-lg px-2.5 py-2">
                 <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono text-muted-foreground min-w-[2ch] whitespace-nowrap w-full text-center absolute -top-6">
+                    <span className="text-xs font-mono text-muted-foreground whitespace-nowrap w-full text-center absolute inset-0 -top-6">
                         {getWeightLabel(weight)}
                     </span>
                     <div className="flex-1 relative group">

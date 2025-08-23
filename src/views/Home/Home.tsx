@@ -1,8 +1,5 @@
 import { useTextConfig } from "@/context/textConfig";
-import {
-    GoogleFontKey,
-    useGoogleFonts,
-} from "@/hooks/useGoogleFonts/useGoogleFonts";
+import { type GoogleFontKey, useGoogleFonts } from "@/hooks/useGoogleFonts";
 import { useEffect } from "react";
 import FontOptions from "./FontOptions";
 import { TextCanvas } from "@/components/organisms/TextCanvas";
@@ -17,7 +14,7 @@ export const Home: React.FC = () => {
     }, [config.font]);
 
     return (
-        <main className="min-h-screen grid grid-cols-1 lg:grid-cols-4 place-items-start gap-4 p-4">
+        <main className="h-screen grid grid-cols-1 lg:grid-cols-4 place-items-start gap-4 p-4">
             <div className="h-[75dvh] lg:h-[calc(100dvh-2rem)] w-full lg:col-span-3 relative flex justify-center">
                 <FontOptions
                     className="absolute top-3 z-10 [&>div]:bg-red-300"

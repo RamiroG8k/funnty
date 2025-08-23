@@ -1,4 +1,5 @@
 import { TextConfig } from "@/context/textConfig";
+import { DEFAULT_TEXT_CONFIG } from "@/context/textConfig/textConfig";
 
 export const wrapText = (
     ctx: CanvasRenderingContext2D,
@@ -128,25 +129,8 @@ export function shareUrl(textConfig: TextConfig) {
     const params = new URLSearchParams();
 
     // Only include non-default values to keep URL clean
-    const defaults = {
-        text: `Lorem ipsumdolor
-sit amet, consectetur adipiscing elit.`,
-        font: "Montserrat",
-        size: 20,
-        weight: "400",
-        color: "#000000",
-        strokeWidth: 0,
-        strokeColor: "#FF0000",
-        letterSpacing: 0,
-        lineHeight: 1.2,
-        alignment: "left",
-    };
-
     Object.entries(textConfig).forEach(([key, value]) => {
-        if (
-            key !== "updateConfig" &&
-            value !== defaults[key as keyof typeof defaults]
-        ) {
+        if (value !== DEFAULT_TEXT_CONFIG[key as keyof TextConfig]) {
             params.set(key, String(value));
         }
     });

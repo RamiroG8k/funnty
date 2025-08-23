@@ -16,7 +16,7 @@ const TextConfigContext = createContext<TextConfigContextProps>(
     {} as TextConfigContextProps,
 );
 
-const defaultTextConfig: TextConfig = {
+export const DEFAULT_TEXT_CONFIG: TextConfig = {
     text: `Lorem ipsumdolor
 sit amet, consectetur adipiscing elit.`,
     font: "Montserrat",
@@ -31,7 +31,7 @@ sit amet, consectetur adipiscing elit.`,
 };
 
 function TextConfigProvider({ children }: PropsWithChildren) {
-    const [textConfig, setTextConfig] = useState<TextConfig>(defaultTextConfig);
+    const [textConfig, setTextConfig] = useState(DEFAULT_TEXT_CONFIG);
 
     useEffect(() => {
         const urlConfig = getConfigFromUrl();
