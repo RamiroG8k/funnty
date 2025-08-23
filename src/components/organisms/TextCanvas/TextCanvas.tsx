@@ -106,12 +106,19 @@ export const TextCanvas: React.FC<TextCanvasProps> = (props) => {
 
     useEffect(() => {
         drawText();
-    }, [config]);
+    }, [drawText]);
 
     return (
         <div
             ref={containerRef}
             className={cn("bg-gray-50 border rounded-lg", className)}
+            style={{
+                backgroundImage: `
+                    radial-gradient(circle at 1px 1px, rgba(0,0,0,0.075) 1px, transparent 0)
+                `,
+                backgroundSize: "30px 30px",
+                backgroundPosition: "50%",
+            }}
         >
             <canvas
                 ref={canvasRef}

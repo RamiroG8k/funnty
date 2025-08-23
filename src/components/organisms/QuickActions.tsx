@@ -1,23 +1,19 @@
 import React from "react";
 import { Button } from "../atoms/button";
-import { Slider } from "../atoms/slider";
-import { Share2, Link, Clipboard, Download, Settings } from "lucide-react";
-import { TextConfig, useTextConfig } from "@/context/textConfig";
+
+import { Share2, Link, Clipboard, Download, Palette } from "lucide-react";
+import { useTextConfig } from "@/context/textConfig";
 import { Popover, PopoverContent, PopoverTrigger } from "../atoms/popover";
 import {
     shareUrl,
     downloadCanvasAsImage,
     copyCanvasAsImage,
 } from "./TextCanvas/canvasTextUtils";
+
 import {
-    Drawer,
-    DrawerContent,
-    DrawerDescription,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger,
-} from "../molecules/drawer";
-import { ControlPanel } from "./ControlPanel";
+    CarouselSelector,
+    CarouselSelectorOption,
+} from "../molecules/carousel-selector";
 
 interface QuickActionsProps {
     canvas?: HTMLCanvasElement | null;
@@ -25,35 +21,10 @@ interface QuickActionsProps {
 
 export const QuickActions: React.FC<QuickActionsProps> = (props) => {
     const { canvas } = props;
-    const textConfig = useTextConfig();
-    const { updateConfig, weight } = textConfig;
-
-    const handleWeightChange = ([value]: number[]) => {
-        const newWeight = value.toString() as TextConfig["weight"];
-        updateConfig({ weight: newWeight });
-
-        if ("vibrate" in navigator) {
-            navigator.vibrate(10);
-        }
-    };
-
-    const getWeightLabel = (weight: string) => {
-        const weightMap: Record<string, string> = {
-            "100": "Thin",
-            "200": "ExtraLight",
-            "300": "Light",
-            "400": "Regular",
-            "500": "Medium",
-            "600": "SemiBold",
-            "700": "Bold",
-            "800": "ExtraBold",
-            "900": "Black",
-        };
-        return weightMap[weight] || weight;
-    };
+    const { updateConfig, ...config } = useTextConfig();
 
     const handleShareUrl = () => {
-        shareUrl(textConfig);
+        shareUrl(config);
     };
 
     const handleDownload = () => {
@@ -68,84 +39,96 @@ export const QuickActions: React.FC<QuickActionsProps> = (props) => {
         }
     };
 
+    const handleValueChange = (key: string, value: number) => {
+        updateConfig({ [key]: value });
+    };
+
+    const options: CarouselSelectorOption[] = [
+        {
+            label: "Line Height",
+            key: "lineHeight",
+            value: config.lineHeight,
+            unit: "",
+            step: 0.1,
+            min: 0.5,
+            max: 3,
+            format: (val) => val.toFixed(2),
+        },
+        {
+            label: "Weight",
+            key: "weight",
+            value: Number(config.weight),
+            unit: "w",
+            step: 100,
+            min: 100,
+            max: 900,
+        },
+        {
+            label: "Size",
+            key: "size",
+            value: config.size,
+            unit: "px",
+            step: 1,
+            min: 8,
+            max: 200,
+        },
+        {
+            label: "Spacing",
+            key: "letterSpacing",
+            value: config.letterSpacing,
+            unit: "px",
+            step: 0.1,
+            min: -10,
+            max: 20,
+            format: (val) => val.toFixed(1),
+        },
+        {
+            label: "Stroke",
+            key: "strokeWidth",
+            value: config.strokeWidth,
+            unit: "px",
+            step: 0.5,
+            min: 0,
+            max: 10,
+            format: (val) => val.toFixed(1),
+        },
+    ];
+
     return (
-        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-2 md:gap-3">
-            <Drawer>
-                <DrawerTrigger asChild>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        className="bg-background hover:bg-primary hover:text-primary-foreground transition-colors duration-200"
-                    >
-                        <Settings className="h-4 w-4" />
-                    </Button>
-                </DrawerTrigger>
-                <DrawerContent>
-                    <DrawerHeader>
-                        <DrawerTitle>Text Settings</DrawerTitle>
-                        <DrawerDescription>
-                            Customize your text appearance and styling.
-                        </DrawerDescription>
-                    </DrawerHeader>
-                    <ControlPanel />
-                </DrawerContent>
-            </Drawer>
+        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-2">
+            <Button
+                size="sm"
+                className="aspect-square shrink-0"
+                variant="outline"
+            >
+                <Palette />
+            </Button>
 
-            <div className="flex-1 max-w-xs bg-background/95 shadow-xs backdrop-blur-sm border rounded-lg px-2.5 py-2">
-                <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono text-muted-foreground whitespace-nowrap w-full text-center absolute inset-0 -top-6">
-                        {getWeightLabel(weight)}
-                    </span>
-                    <div className="flex-1 relative group">
-                        <Slider
-                            min={100}
-                            max={900}
-                            step={100}
-                            value={[parseInt(weight)]}
-                            onValueChange={handleWeightChange}
-                            className="flex-1 transition-all duration-150 group-hover:scale-y-110 z-10"
-                        />
-
-                        <div className="absolute -bottom-1 left-0 right-0 flex justify-between px-1">
-                            {[100, 200, 300, 400, 500, 600, 700, 800, 900].map(
-                                (w) => (
-                                    <div
-                                        key={w}
-                                        className={`w-0.5 h-0.5 rounded-full transition-all duration-200 ${
-                                            parseInt(weight) === w
-                                                ? "bg-primary scale-150"
-                                                : "bg-muted-foreground/30"
-                                        }`}
-                                    />
-                                ),
-                            )}
-                        </div>
-                    </div>
-                    <span className="text-xs font-mono text-muted-foreground min-w-[2ch] text-center">
-                        {weight}
-                    </span>
-                </div>
-            </div>
+            <CarouselSelector
+                className="w-3/4 max-w-52 lg:max-w-sm px-2"
+                options={options}
+                onValueChange={handleValueChange}
+            />
 
             <Popover>
                 <PopoverTrigger asChild>
                     <Button
                         size="sm"
                         variant="outline"
-                        className="bg-background hover:bg-primary hover:text-primary-foreground transition-colors duration-200"
+                        className="h-8 w-8 p-0 bg-background hover:bg-primary hover:text-primary-foreground transition-colors duration-200"
                     >
-                        <Share2 className="h-4 w-4" />
+                        <Share2 className="h-3.5 w-3.5" />
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-48 p-2" align="end">
-                    <div className="flex flex-col gap-1">
+                <PopoverContent className="w-40 p-1.5" align="end">
+                    <div className="flex flex-col gap-0.5">
                         <Button
                             variant="ghost"
                             size="sm"
                             onClick={handleShareUrl}
                             className="justify-start gap-2"
                         >
-                            <Link className="h-4 w-4" />
+                            <Link className="h-3.5 w-3.5" />
                             Share URL
                         </Button>
                         <Button
@@ -154,7 +137,7 @@ export const QuickActions: React.FC<QuickActionsProps> = (props) => {
                             onClick={handleCopyImage}
                             className="justify-start gap-2"
                         >
-                            <Clipboard className="h-4 w-4" />
+                            <Clipboard className="h-3.5 w-3.5" />
                             Copy Image
                         </Button>
                         <Button
@@ -163,7 +146,7 @@ export const QuickActions: React.FC<QuickActionsProps> = (props) => {
                             onClick={handleDownload}
                             className="justify-start gap-2"
                         >
-                            <Download className="h-4 w-4" />
+                            <Download className="h-3.5 w-3.5" />
                             Download
                         </Button>
                     </div>
