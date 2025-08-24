@@ -7,5 +7,6 @@ export enum GoogleFonts {
     Montserrat = "Montserrat",
     Nabla = "Nabla",
     Tangerine = "Tangerine",
+    SpaceGrotesk = "Space Grotesk",
     UnifrakturMaguntia = "UnifrakturMaguntia",
 }
