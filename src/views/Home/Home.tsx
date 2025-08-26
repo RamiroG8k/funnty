@@ -14,14 +14,14 @@ export const Home: React.FC = () => {
     }, [config.font]);
 
     return (
-        <main className="h-screen grid grid-cols-1 lg:grid-cols-4 place-items-start gap-4 p-4">
-            <div className="h-[75dvh] lg:h-[calc(100dvh-2rem)] w-full lg:col-span-3 relative flex justify-center">
+        <main className="grid grid-cols-1 lg:grid-cols-4 place-items-start gap-4 p-4">
+            <div className="h-[75svh] lg:h-[calc(100svh-2rem)] w-full lg:col-span-3 relative flex justify-center">
                 <FontOptions
                     className="absolute top-3 z-10 [&>div]:bg-red-300"
                     onFontChange={loadFont}
                 />
 
-                <TextCanvas className="w-full grow-0" />
+                <TextCanvas className="h-full w-full grow-0" />
             </div>
 
             <InputField
