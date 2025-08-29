@@ -10,7 +10,9 @@ import { getConfigFromUrl } from "../textProviderUtils";
 
 interface TextConfigContextProps extends TextConfig {
     canvas: HTMLCanvasElement | null;
-    updateConfig: (newConfig: Partial<TextConfig>) => void;
+    updateConfig: (
+        newConfig: Partial<TextConfig & { canvas: HTMLCanvasElement | null }>,
+    ) => void;
 }
 
 const TextConfigContext = createContext<TextConfigContextProps>(

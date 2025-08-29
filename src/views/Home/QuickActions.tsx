@@ -1,17 +1,21 @@
-import { Button } from "@/components/atoms/button";
-
 import { useTextConfig } from "@/context/textConfig";
 
 import { CarouselSelector, CarouselSelectorOption } from "./carousel-selector";
-import { ChevronsUpDown } from "lucide-react";
 import ColorSelector from "./color-selector";
+import { DraggableButton } from "./draggable-button";
+import { useCallback, useState } from "react";
 
 export const QuickActions: React.FC = () => {
     const { updateConfig, ...config } = useTextConfig();
+    const [currentActiveKey, setCurrentActiveKey] = useState("lineHeight");
 
     const handleValueChange = (key: string, value: number) => {
         updateConfig({ [key]: value });
     };
+
+    const handleActiveKeyChange = useCallback((key: string) => {
+        setCurrentActiveKey(key);
+    }, []);
 
     const options: CarouselSelectorOption[] = [
         {
@@ -67,35 +71,18 @@ export const QuickActions: React.FC = () => {
     return (
         <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-2">
             <ColorSelector />
-            {/*<Button
-                size="sm"
-                className="aspect-square shrink-0"
-                variant="outline"
-                onClick={() => {}}
-            >
-                <span
-                    className="aspect-square size-3 rounded-full outline-2 outline-offset-2"
-                    style={{
-                        backgroundColor: config.color,
-                        outlineColor: config.strokeColor,
-                    }}
-                />
-            </Button>*/}
 
             <CarouselSelector
                 className="w-3/4 max-w-52 lg:max-w-sm px-2"
                 options={options}
-                onValueChange={handleValueChange}
+                onActiveKeyChange={handleActiveKeyChange}
             />
 
-            <Button
-                size="sm"
-                className="aspect-square shrink-0"
-                variant="outline"
-                onClick={() => {}}
-            >
-                <ChevronsUpDown />
-            </Button>
+            <DraggableButton
+                currentKey={currentActiveKey}
+                options={options}
+                onValueChange={handleValueChange}
+            />
         </div>
     );
 };

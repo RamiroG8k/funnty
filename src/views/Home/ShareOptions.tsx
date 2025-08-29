@@ -11,23 +11,46 @@ import {
     downloadCanvasAsImage,
     shareUrl,
 } from "@/components/organisms/TextCanvas/canvasTextUtils";
+import { TextConfig } from "@/context/textConfig/types";
 
 const ShareOptions: React.FC = () => {
-    const { canvas, ...config } = useTextConfig();
+    const textConfigData = useTextConfig();
+    const { canvas, ...config } = textConfigData;
 
     const handleShareUrl = () => {
-        shareUrl(config);
+        // Only pass text configuration, not canvas or functions
+        const textOnlyConfig: TextConfig = {
+            text: config.text,
+            font: config.font,
+            size: config.size,
+            weight: config.weight,
+            color: config.color,
+            strokeWidth: config.strokeWidth,
+            strokeColor: config.strokeColor,
+            letterSpacing: config.letterSpacing,
+            lineHeight: config.lineHeight,
+            alignment: config.alignment,
+        };
+        shareUrl(textOnlyConfig);
     };
 
     const handleDownload = () => {
         if (canvas) {
-            downloadCanvasAsImage(canvas);
+            downloadCanvasAsImage(canvas, "funnty-design");
+        } else {
+            console.warn("Canvas not available for download");
         }
     };
 
     const handleCopyImage = async () => {
         if (canvas) {
-            await copyCanvasAsImage(canvas);
+            try {
+                await copyCanvasAsImage(canvas);
+            } catch (error) {
+                console.error("Failed to copy image:", error);
+            }
+        } else {
+            console.warn("Canvas not available for copying");
         }
     };
 
