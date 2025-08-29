@@ -37,7 +37,7 @@ const ColorSelector: React.FC = () => {
                 </Button>
             </DrawerTrigger>
 
-            <DrawerContent className="group/drawer-content pb-4">
+            <DrawerContent className="group/drawer-content pb-8">
                 <span
                     aria-hidden="true"
                     className={cn(

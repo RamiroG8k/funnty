@@ -23,13 +23,33 @@ export default defineConfig({
                 short_name: "Funnty",
                 description:
                     "Fun app to create text elements as images for stickers of creative media content",
-                theme_color: "#702632",
+                theme_color: "#FFFFFF",
             },
 
             workbox: {
                 globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
                 cleanupOutdatedCaches: true,
                 clientsClaim: true,
+                runtimeCaching: [
+                    {
+                        urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+                        handler: "StaleWhileRevalidate",
+                        options: {
+                            cacheName: "google-fonts-stylesheets",
+                        },
+                    },
+                    {
+                        urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+                        handler: "CacheFirst",
+                        options: {
+                            cacheName: "google-fonts-webfonts",
+                            expiration: {
+                                maxEntries: 30,
+                                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+                            },
+                        },
+                    },
+                ],
             },
 
             devOptions: {

@@ -81,7 +81,7 @@ export async function copyCanvasAsImage(canvas: HTMLCanvasElement) {
         return;
     }
 
-    let data: ClipboardItem;
+    let data: ClipboardItem | null = null;
 
     try {
         data = new window.ClipboardItem({ [blob.type]: blob });
@@ -96,6 +96,10 @@ export async function copyCanvasAsImage(canvas: HTMLCanvasElement) {
             "navigator.clipboard.write with ClipboardItem failed",
             err,
         );
+    }
+
+    if (data) {
+        return;
     }
 
     try {

@@ -2,10 +2,13 @@ import { useCallback, useState } from "react";
 import { GoogleFonts } from "./fonts";
 import { GoogleFontKey } from "./types";
 
-export const getFontOptions = () => {
+export const getFontOptions = (): Array<{
+    label: string;
+    value: GoogleFontKey;
+}> => {
     return Object.entries(GoogleFonts).map(([key, value]) => ({
         label: value,
-        value: key,
+        value: key as GoogleFontKey,
     }));
 };
 

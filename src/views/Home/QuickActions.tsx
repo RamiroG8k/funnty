@@ -1,6 +1,9 @@
 import { useTextConfig } from "@/context/textConfig";
 
-import { CarouselSelector, CarouselSelectorOption } from "./carousel-selector";
+import {
+    CarouselSelector,
+    CarouselSelectorOption,
+} from "../../components/molecules/carousel-selector";
 import ColorSelector from "./color-selector";
 import { DraggableButton } from "./draggable-button";
 import { useCallback, useState } from "react";

@@ -10,12 +10,16 @@ import {
     copyCanvasAsImage,
     downloadCanvasAsImage,
     shareUrl,
-} from "@/components/organisms/TextCanvas/canvasTextUtils";
+} from "./TextCanvas/canvasTextUtils";
 import { TextConfig } from "@/context/textConfig/types";
 
-const ShareOptions: React.FC = () => {
+type ShareOptionsProps = {
+    canvas: HTMLCanvasElement | null;
+};
+
+const ShareOptions: React.FC<ShareOptionsProps> = ({ canvas }) => {
     const textConfigData = useTextConfig();
-    const { canvas, ...config } = textConfigData;
+    const { ...config } = textConfigData;
 
     const handleShareUrl = () => {
         // Only pass text configuration, not canvas or functions
