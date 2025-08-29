@@ -1,0 +1,83 @@
+import { Share2, Link, Clipboard, Download } from "lucide-react";
+import { useTextConfig } from "@/context/textConfig";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/atoms/popover";
+import { Button } from "@/components/atoms/button";
+import {
+    copyCanvasAsImage,
+    downloadCanvasAsImage,
+    shareUrl,
+} from "@/components/organisms/TextCanvas/canvasTextUtils";
+
+const ShareOptions: React.FC = () => {
+    const { canvas, ...config } = useTextConfig();
+
+    const handleShareUrl = () => {
+        shareUrl(config);
+    };
+
+    const handleDownload = () => {
+        if (canvas) {
+            downloadCanvasAsImage(canvas);
+        }
+    };
+
+    const handleCopyImage = async () => {
+        if (canvas) {
+            await copyCanvasAsImage(canvas);
+        }
+    };
+
+    return (
+        <Popover>
+            <PopoverTrigger asChild>
+                <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-8 w-8 p-0 bg-background hover:bg-primary hover:text-primary-foreground transition-colors duration-200"
+                >
+                    <Share2 className="h-3.5 w-3.5" />
+                </Button>
+            </PopoverTrigger>
+
+            <PopoverContent className="w-40 p-1.5" align="end">
+                <div className="flex flex-col gap-0.5">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleShareUrl}
+                        className="justify-start gap-2"
+                    >
+                        <Link className="h-3.5 w-3.5" />
+                        Share URL
+                    </Button>
+
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleCopyImage}
+                        className="justify-start gap-2"
+                    >
+                        <Clipboard className="h-3.5 w-3.5" />
+                        Copy Image
+                    </Button>
+
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleDownload}
+                        className="justify-start gap-2"
+                    >
+                        <Download className="h-3.5 w-3.5" />
+                        Download
+                    </Button>
+                </div>
+            </PopoverContent>
+        </Popover>
+    );
+};
+
+export default ShareOptions;

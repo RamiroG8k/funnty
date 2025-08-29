@@ -9,6 +9,7 @@ import { TextConfig } from "./types";
 import { getConfigFromUrl } from "../textProviderUtils";
 
 interface TextConfigContextProps extends TextConfig {
+    canvas: HTMLCanvasElement | null;
     updateConfig: (newConfig: Partial<TextConfig>) => void;
 }
 
@@ -42,6 +43,7 @@ function TextConfigProvider({ children }: PropsWithChildren) {
 
     const value = {
         ...textConfig,
+        canvas: null,
         updateConfig: (newConfig: Partial<TextConfig>) => {
             setTextConfig((prevConfig) => ({ ...prevConfig, ...newConfig }));
         },

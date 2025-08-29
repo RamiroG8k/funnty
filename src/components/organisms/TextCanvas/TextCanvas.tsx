@@ -1,6 +1,6 @@
 import { useTextConfig } from "@/context/textConfig";
-import { useCallback, useEffect, useRef } from "react";
-import { QuickActions } from "../QuickActions";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { QuickActions } from "../../../views/Home/QuickActions";
 import { drawTextWithLetterSpacing, wrapText } from "./canvasTextUtils";
 import { cn } from "@/lib/utils";
 
@@ -12,7 +12,7 @@ type TextCanvasProps = {
 
 export const TextCanvas: React.FC<TextCanvasProps> = (props) => {
     const { className } = props;
-    const { ...config } = useTextConfig();
+    const { updateConfig, ...config } = useTextConfig();
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -108,6 +108,12 @@ export const TextCanvas: React.FC<TextCanvasProps> = (props) => {
         drawText();
     }, [drawText]);
 
+    useLayoutEffect(() => {
+        if (!canvasRef.current) return;
+
+        updateConfig({ canvas: canvasRef.current });
+    }, [canvasRef.current]);
+
     return (
         <div
             ref={containerRef}
@@ -128,7 +134,7 @@ export const TextCanvas: React.FC<TextCanvasProps> = (props) => {
                 }}
             />
 
-            <QuickActions canvas={canvasRef.current} />
+            <QuickActions />
         </div>
     );
 };

@@ -4,6 +4,7 @@ import { useTextConfig } from "@/context/textConfig";
 import { getFontOptions, type GoogleFontKey } from "@/hooks/useGoogleFonts";
 import { cn } from "@/lib/utils";
 import { AlignCenter, AlignLeft, AlignRight } from "lucide-react";
+import ShareOptions from "./ShareOptions";
 
 interface FontOptionsProps {
     className?: string;
@@ -45,6 +46,8 @@ const FontOptions: React.FC<FontOptionsProps> = (props) => {
                 options={getFontOptions()}
                 value={config.font}
             />
+
+            <ShareOptions />
         </div>
     );
 };
